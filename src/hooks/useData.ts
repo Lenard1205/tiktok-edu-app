@@ -7,35 +7,35 @@ export const useData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [coursesResponse, videosResponse] = await Promise.all([
-          fetch('/data/courses.json'),
-          fetch('/data/videos.json'),
-        ]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [coursesResponse, videosResponse] = await Promise.all([
+        fetch('/api/courses').catch(() => fetch('/data/courses.json')),
+        fetch('/api/videos').catch(() => fetch('/data/videos.json')),
+      ]);
 
-        if (!coursesResponse.ok || !videosResponse.ok) {
-          throw new Error('Failed to fetch data');
-        }
-
-        const coursesData = await coursesResponse.json();
-        const videosData = await videosResponse.json();
-
-        setCourses(coursesData);
-        setVideos(videosData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
+      if (!coursesResponse.ok || !videosResponse.ok) {
+        throw new Error('Failed to fetch data');
       }
-    };
 
+      const coursesData = await coursesResponse.json();
+      const videosData = await videosResponse.json();
+
+      setCourses(coursesData);
+      setVideos(videosData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
-  return { courses, videos, loading, error };
+  return { courses, videos, loading, error, refreshData: fetchData };
 };
 
 export const usePlaylist = (courseTag: string, settings: AppSettings) => {
