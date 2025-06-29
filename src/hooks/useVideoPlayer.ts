@@ -5,6 +5,7 @@ export const useVideoPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [showSubtitles, setShowSubtitles] = useState(true);
+  const [subtitleMode, setSubtitleMode] = useState<'zh' | 'en' | 'both'>('both');
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,14 +60,21 @@ export const useVideoPlayer = () => {
 
   // 字幕切换
   const toggleSubtitles = useCallback(() => {
-    setShowSubtitles(!showSubtitles);
-    if (videoRef.current) {
-      const tracks = videoRef.current.textTracks;
-      for (let i = 0; i < tracks.length; i++) {
-        tracks[i].mode = !showSubtitles ? 'showing' : 'hidden';
+    setShowSubtitles(prev => {
+      const next = !prev;
+      if (videoRef.current) {
+        const tracks = videoRef.current.textTracks;
+        for (let i = 0; i < tracks.length; i++) {
+          tracks[i].mode = next ? 'showing' : 'hidden';
+        }
       }
-    }
-  }, [showSubtitles]);
+      return next;
+    });
+  }, []);
+
+  const cycleSubtitleMode = useCallback(() => {
+    setSubtitleMode(m => (m === 'both' ? 'zh' : m === 'zh' ? 'en' : 'both'));
+  }, []);
 
   // 跳转到指定时间
   const seekTo = useCallback((time: number) => {
@@ -135,6 +143,7 @@ export const useVideoPlayer = () => {
     isPlaying,
     isMuted,
     showSubtitles,
+    subtitleMode,
     currentTime,
     duration,
     isLoading,
@@ -143,6 +152,7 @@ export const useVideoPlayer = () => {
     togglePlay,
     toggleMute,
     toggleSubtitles,
+    cycleSubtitleMode,
     seekTo,
   };
 };

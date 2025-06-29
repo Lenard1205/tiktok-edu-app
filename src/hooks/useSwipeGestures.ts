@@ -22,23 +22,17 @@ export const useSwipeGestures = (
     const element = elementRef.current;
     if (!element) return;
 
-    let touchStartHandler: (e: TouchEvent) => void;
-    let touchEndHandler: (e: TouchEvent) => void;
-    let mouseDownHandler: (e: MouseEvent) => void;
-    let mouseUpHandler: (e: MouseEvent) => void;
-
-    // 触摸事件处理
-    touchStartHandler = (e: TouchEvent) => {
+    const touchStartHandler = (e: TouchEvent) => {
       const touch = e.touches[0];
       startY.current = touch.clientY;
       startX.current = touch.clientX;
       startTime.current = Date.now();
-      
+
       // 只在特定条件下阻止默认行为，避免干扰其他元素点击
       // 不阻止默认行为，让事件正常冒泡
     };
 
-    touchEndHandler = (e: TouchEvent) => {
+    const touchEndHandler = (e: TouchEvent) => {
       const touch = e.changedTouches[0];
       const endY = touch.clientY;
       const endX = touch.clientX;
@@ -76,13 +70,13 @@ export const useSwipeGestures = (
     };
 
     // 鼠标事件处理 (用于桌面端测试)
-    mouseDownHandler = (e: MouseEvent) => {
+    const mouseDownHandler = (e: MouseEvent) => {
       startY.current = e.clientY;
       startX.current = e.clientX;
       startTime.current = Date.now();
     };
 
-    mouseUpHandler = (e: MouseEvent) => {
+    const mouseUpHandler = (e: MouseEvent) => {
       const endY = e.clientY;
       const endX = e.clientX;
       const endTime = Date.now();
