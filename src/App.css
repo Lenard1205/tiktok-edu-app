@@ -117,3 +117,21 @@ video::cue {
     padding: 10px 14px !important;
   }
 }
+
+/* 自定义字幕覆盖层样式 */
+.subtitle-overlay span {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .subtitle-overlay span {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 769px) {
+  .subtitle-overlay span {
+    font-size: 20px;
+  }
+}

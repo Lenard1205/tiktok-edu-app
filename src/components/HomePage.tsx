@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import SubtitleOverlay from './SubtitleOverlay';
 import { useNavigate } from 'react-router-dom';
-import { Heart, MessageCircle, Bookmark, Volume2, VolumeX, Type, FileX2, Play, Pause } from 'lucide-react';
+import { Heart, MessageCircle, Bookmark, Volume2, VolumeX, Type, FileX2, Play, Pause, Languages } from 'lucide-react';
 import { usePlaylist, useAppSettings } from '../hooks/useData';
 import { useVideoPlayer } from '../hooks/useVideoPlayer';
 import { useSwipeGestures } from '../hooks/useSwipeGestures';
@@ -20,6 +21,7 @@ const HomePage: React.FC = () => {
     isPlaying,
     isMuted,
     showSubtitles,
+    subtitleMode,
     currentTime,
     duration,
     isLoading,
@@ -28,6 +30,7 @@ const HomePage: React.FC = () => {
     togglePlay,
     toggleMute,
     toggleSubtitles,
+    cycleSubtitleMode,
     seekTo,
   } = useVideoPlayer();
 
@@ -156,6 +159,12 @@ const HomePage: React.FC = () => {
           />
         )}
       </video>
+      <SubtitleOverlay
+        videoRef={videoRef}
+        subtitleUrl={currentItem.video.subtitleUrl}
+        visible={showSubtitles}
+        mode={subtitleMode}
+      />
 
       {/* 预加载的下一个视频 */}
       <video
@@ -244,6 +253,13 @@ const HomePage: React.FC = () => {
             <FileX2 className="w-6 h-6 text-white/60" />
           )}
         </button>
+        <button
+          onClick={cycleSubtitleMode}
+          className="w-12 h-12 flex flex-col items-center justify-center text-xs text-white"
+        >
+          <Languages className="w-5 h-5" />
+          <span>{subtitleMode === 'zh' ? '中' : subtitleMode === 'en' ? 'EN' : '中/EN'}</span>
+        </button>
       </div>
 
       {/* 左下角课程信息 */}
@@ -260,8 +276,15 @@ const HomePage: React.FC = () => {
       <div className="absolute bottom-20 left-4 right-20 z-20">
         <div className="flex items-center space-x-2 text-white text-xs">
           <span>{formatTime(currentTime)}</span>
-          <div className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
-            <div 
+          <div
+            className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden cursor-pointer"
+            onClick={(e) => {
+              const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+              const ratio = (e.clientX - rect.left) / rect.width;
+              seekTo(duration * ratio);
+            }}
+          >
+            <div
               className="h-full bg-white transition-all duration-300"
               style={{ width: `${progress}%` }}
             />

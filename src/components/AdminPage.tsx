@@ -8,7 +8,7 @@ import SecurityDashboard from './SecurityDashboard';
 
 const AdminPage: React.FC = () => {
   const navigate = useNavigate();
-  const { courses, videos, loading, error } = useData();
+  const { courses, videos, loading, error, refreshData } = useData();
   const { settings, updateSettings } = useAppSettings();
   const [activeTab, setActiveTab] = useState<'courses' | 'videos' | 'settings' | 'security'>('courses');
   const [showCourseForm, setShowCourseForm] = useState(false);
@@ -68,11 +68,33 @@ const AdminPage: React.FC = () => {
     resetCourseForm();
   };
 
-  const handleSaveVideo = () => {
-    // 这里应该调用API保存视频数据
-    console.log('保存视频:', videoForm);
-    setShowVideoForm(false);
-    resetVideoForm();
+  const handleSaveVideo = async () => {
+    const payload = {
+      courseName: videoForm.courseName,
+      sequence: videoForm.sequence,
+      videoUrl: videoForm.videoUrl,
+      subtitleUrl: videoForm.subtitleUrl,
+      comments: videoForm.comments,
+      likes: videoForm.likes,
+      favorites: videoForm.favorites,
+    };
+    const url = editingVideo
+      ? `/api/videos/${editingVideo.id}`
+      : '/api/videos';
+    const method = editingVideo ? 'PUT' : 'POST';
+    try {
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      await refreshData();
+    } catch (err) {
+      console.error('保存视频失败', err);
+    } finally {
+      setShowVideoForm(false);
+      resetVideoForm();
+    }
   };
 
   const handleSaveSettings = () => {
@@ -111,9 +133,13 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  const handleDeleteVideo = (videoId: number) => {
-    if (confirm('确定要删除这个视频吗？')) {
-      console.log('删除视频:', videoId);
+  const handleDeleteVideo = async (videoId: number) => {
+    if (!confirm('确定要删除这个视频吗？')) return;
+    try {
+      await fetch(`/api/videos/${videoId}`, { method: 'DELETE' });
+      await refreshData();
+    } catch (err) {
+      console.error('删除视频失败', err);
     }
   };
 
