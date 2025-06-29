@@ -10,13 +10,13 @@ export const useData = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [coursesResponse, videosResponse] = await Promise.all([
-        fetch('/api/courses').catch(() => fetch('/data/courses.json')),
-        fetch('/api/videos').catch(() => fetch('/data/videos.json')),
-      ]);
-
-      if (!coursesResponse.ok || !videosResponse.ok) {
-        throw new Error('Failed to fetch data');
+      let coursesResponse = await fetch('/api/courses').catch(() => undefined);
+      if (!coursesResponse || !coursesResponse.ok) {
+        coursesResponse = await fetch('/data/courses.json');
+      }
+      let videosResponse = await fetch('/api/videos').catch(() => undefined);
+      if (!videosResponse || !videosResponse.ok) {
+        videosResponse = await fetch('/data/videos.json');
       }
 
       const coursesData = await coursesResponse.json();
