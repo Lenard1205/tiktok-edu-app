@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "tag": "1200",
+    "name": "1200",
+    "description": "适合1200词汇量的英语学习课程",
+    "avatar": "/images/avatars/1200.png"
+  },
+  {
+    "id": 2, 
+    "tag": "2000",
+    "name": "2000", 
+    "description": "适合2000词汇量的英语学习课程",
+    "avatar": "/images/avatars/2000.jpg"
+  },
+  {
+    "id": 3,
+    "tag": "3500", 
+    "name": "3500",
+    "description": "适合3500词汇量的英语学习课程", 
+    "avatar": "/images/avatars/3500.jpg"
+  },
+  {
+    "id": 4,
+    "tag": "STEM",
+    "name": "STEM", 
+    "description": "科学技术工程数学综合课程",
+    "avatar": "/images/avatars/STEM.jpg"
+  },
+  {
+    "id": 5,
+    "tag": "Relax",
+    "name": "Relax",
+    "description": "轻松愉快的学习内容", 
+    "avatar": "/images/avatars/Relax.jpg"
+  },
+  {
+    "id": 6,
+    "tag": "introduce",
+    "name": "课程介绍",
+    "description": "各种课程的介绍视频",
+    "avatar": "/images/avatars/introduce.jpg"
+  }
+]
