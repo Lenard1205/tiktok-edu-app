@@ -7,7 +7,8 @@
     "dev": "yes | pnpm install && vite",
     "build": "yes | pnpm install && rm -rf node_modules/.vite-temp && tsc -b && vite build",
     "lint": "yes | pnpm install && eslint .",
-    "preview": "yes | pnpm install && vite preview"
+    "preview": "yes | pnpm install && vite preview",
+    "server": "node server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -42,6 +43,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "express": "^4.19.2",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.0.0",
     "embla-carousel-react": "^8.5.2",

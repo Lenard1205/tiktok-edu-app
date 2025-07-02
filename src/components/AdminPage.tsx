@@ -61,18 +61,32 @@ const AdminPage: React.FC = () => {
     setEditingVideo(null);
   };
 
-  const handleSaveCourse = () => {
-    // 这里应该调用API保存课程数据
-    console.log('保存课程:', courseForm);
+  const handleSaveCourse = async () => {
+    const method = editingCourse ? 'PUT' : 'POST';
+    const url = editingCourse
+      ? `/api/courses/${editingCourse.id}`
+      : '/api/courses';
+    await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(courseForm),
+    });
     setShowCourseForm(false);
     resetCourseForm();
+    window.location.reload();
   };
 
-  const handleSaveVideo = () => {
-    // 这里应该调用API保存视频数据
-    console.log('保存视频:', videoForm);
+  const handleSaveVideo = async () => {
+    const method = editingVideo ? 'PUT' : 'POST';
+    const url = editingVideo ? `/api/videos/${editingVideo.id}` : '/api/videos';
+    await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(videoForm),
+    });
     setShowVideoForm(false);
     resetVideoForm();
+    window.location.reload();
   };
 
   const handleSaveSettings = () => {
@@ -105,15 +119,17 @@ const AdminPage: React.FC = () => {
     setShowVideoForm(true);
   };
 
-  const handleDeleteCourse = (courseId: number) => {
+  const handleDeleteCourse = async (courseId: number) => {
     if (confirm('确定要删除这个课程吗？')) {
-      console.log('删除课程:', courseId);
+      await fetch(`/api/courses/${courseId}`, { method: 'DELETE' });
+      window.location.reload();
     }
   };
 
-  const handleDeleteVideo = (videoId: number) => {
+  const handleDeleteVideo = async (videoId: number) => {
     if (confirm('确定要删除这个视频吗？')) {
-      console.log('删除视频:', videoId);
+      await fetch(`/api/videos/${videoId}`, { method: 'DELETE' });
+      window.location.reload();
     }
   };
 
