@@ -17,15 +17,12 @@ const VideoPlayPage: React.FC = () => {
     isPlaying,
     isMuted,
     showSubtitles,
-    currentTime,
-    duration,
     isLoading,
     hasAudioPermission,
     requestAudioPermission,
     togglePlay,
     toggleMute,
     toggleSubtitles,
-    seekTo,
   } = useVideoPlayer();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,15 +73,6 @@ const VideoPlayPage: React.FC = () => {
   // 移除自动切换逻辑，保持视频循环播放
   // 只有用户交互时才切换视频，符合TikTok的播放逻辑
 
-  // 格式化时间
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  // 计算进度百分比
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   // 首次播放权限请求
   const handleFirstPlay = () => {
@@ -159,7 +147,7 @@ const VideoPlayPage: React.FC = () => {
       </div>
 
       {/* 右侧操作栏 */}
-      <div className="absolute right-4 bottom-32 z-20 flex flex-col space-y-6">
+      <div className="absolute right-4 bottom-24 z-20 flex flex-col space-y-6">
         {/* 课程头像 */}
         <button
           onClick={() => navigate(`/course/${course.tag}`)}
@@ -214,7 +202,7 @@ const VideoPlayPage: React.FC = () => {
       </div>
 
       {/* 左下角视频信息 */}
-      <div className="absolute left-4 bottom-32 z-20 max-w-[60%]">
+      <div className="absolute left-4 bottom-24 z-20 max-w-[60%]">
         <h3 className="text-white text-lg font-semibold mb-1">
           {course.name} - 第{currentVideo.sequence}集
         </h3>
@@ -223,19 +211,6 @@ const VideoPlayPage: React.FC = () => {
         </p>
       </div>
 
-      {/* 底部进度条 */}
-      <div className="absolute bottom-20 left-4 right-20 z-20">
-        <div className="flex items-center space-x-2 text-white text-xs">
-          <span>{formatTime(currentTime)}</span>
-          <div className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-white transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
 
       {/* 右下角声音状态 */}
       <div className="absolute bottom-20 right-4 z-20">
@@ -270,7 +245,7 @@ const VideoPlayPage: React.FC = () => {
       {/* 中间点击区域 - 专门处理播放暂停 */}
       {hasAudioPermission && (
         <div 
-          className="absolute top-20 left-4 bottom-32 right-20 z-10 cursor-pointer"
+          className="absolute top-20 left-4 bottom-24 right-20 z-10 cursor-pointer"
           onClick={handleTogglePlay}
           style={{ 
             // 确保不影响其他元素，透明点击区域

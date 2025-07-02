@@ -12,8 +12,8 @@ export const useData = () => {
       try {
         setLoading(true);
         const [coursesResponse, videosResponse] = await Promise.all([
-          fetch('/data/courses.json'),
-          fetch('/data/videos.json'),
+          fetch('/api/courses').catch(() => fetch('/data/courses.json')),
+          fetch('/api/videos').catch(() => fetch('/data/videos.json')),
         ]);
 
         if (!coursesResponse.ok || !videosResponse.ok) {
